@@ -11,8 +11,6 @@
         <link rel="stylesheet" href="css/L.Control.Locate.min.css">
         <link rel="stylesheet" href="css/qgis2web.css">
         <link rel="stylesheet" href="css/fontawesome-all.min.css">
-        <link rel="stylesheet" href="css/filter.css">
-<link rel="stylesheet" href="css/nouislider.min.css">
         <link rel="stylesheet" href="css/leaflet.photon.css">
         <link rel="stylesheet" href="css/leaflet-measure.css">
         <style>
@@ -32,6 +30,7 @@
         <script src="js/leaflet.js"></script>
         <script src="js/L.Control.Layers.Tree.min.js"></script>
         <script src="js/L.Control.Locate.min.js"></script>
+        <script src="js/leaflet-svg-shape-markers.min.js"></script>
         <script src="js/leaflet.rotatedMarker.js"></script>
         <script src="js/leaflet.pattern.js"></script>
         <script src="js/leaflet-hash.js"></script>
@@ -41,9 +40,6 @@
         <script src="js/labels.js"></script>
         <script src="js/leaflet.photon.js"></script>
         <script src="js/leaflet-measure.js"></script>
-        <script src="js/tailDT.js"></script>
-<script src="js/nouislider.min.js"></script>
-<script src="js/wNumb.js"></script>
         <script src="data/ZPCEZONIFICACION_1.js"></script>
         <script src="data/Poblados_2.js"></script>
         <script src="data/Cerros_3.js"></script>
@@ -321,13 +317,14 @@
         function style_Cerros_3_0() {
             return {
                 pane: 'pane_Cerros_3',
-                radius: 4.8,
+                shape: 'triangle',
+                radius: 8.0,
                 opacity: 1,
                 color: 'rgba(255,255,255,1.0)',
                 dashArray: '',
                 lineCap: 'butt',
                 lineJoin: 'miter',
-                weight: 1.0,
+                weight: 1,
                 fill: true,
                 fillOpacity: 1,
                 fillColor: 'rgba(255,127,0,1.0)',
@@ -349,7 +346,7 @@
                     feature: feature,
                     variables: {}
                 };
-                return L.circleMarker(latlng, style_Cerros_3_0(feature));
+                return L.shapeMarker(latlng, style_Cerros_3_0(feature));
             },
         });
         bounds_group.addLayer(layer_Cerros_3);
@@ -396,174 +393,6 @@
               addLabel(layer, i);
               i++;
         });
-        var mapDiv = document.getElementById('map');
-        var row = document.createElement('div');
-        row.className="row";
-        row.id="all";
-        row.style.height = "100%";
-        var col1 = document.createElement('div');
-        col1.className="col9";
-        col1.id = "mapWindow";
-        col1.style.height = "99%";
-        col1.style.width = "80%";
-        col1.style.display = "inline-block";
-        var col2 = document.createElement('div');
-        col2.className="col3";
-        col2.id = "menu";
-        col2.style.display = "inline-block";
-        mapDiv.parentNode.insertBefore(row, mapDiv);
-        document.getElementById("all").appendChild(col1);
-        document.getElementById("all").appendChild(col2);
-        col1.appendChild(mapDiv)
-        var Filters = {"Zona": "str"};
-        function filterFunc() {
-          map.eachLayer(function(lyr){
-          if ("options" in lyr && "dataVar" in lyr["options"]){
-            features = this[lyr["options"]["dataVar"]].features.slice(0);
-            try{
-              for (key in Filters){
-                keyS = key.replace(/[^a-zA-Z0-9_]/g, "")
-                if (Filters[key] == "str" || Filters[key] == "bool"){
-                  var selection = [];
-                  var options = document.getElementById("sel_" + keyS).options
-                  for (var i=0; i < options.length; i++) {
-                    if (options[i].selected) selection.push(options[i].value);
-                  }
-                    try{
-                      if (key in features[0].properties){
-                        for (i = features.length - 1;
-                          i >= 0; --i){
-                          if (selection.indexOf(
-                          features[i].properties[key])<0
-                          && selection.length>0) {
-                          features.splice(i,1);
-                          }
-                        }
-                      }
-                    } catch(err){
-                  }
-                }
-                if (Filters[key] == "int"){
-                  sliderVals =  document.getElementById(
-                    "div_" + keyS).noUiSlider.get();
-                  try{
-                    if (key in features[0].properties){
-                    for (i = features.length - 1; i >= 0; --i){
-                      if (parseInt(features[i].properties[key])
-                          < sliderVals[0]
-                          || parseInt(features[i].properties[key])
-                          > sliderVals[1]){
-                            features.splice(i,1);
-                          }
-                        }
-                      }
-                    } catch(err){
-                    }
-                  }
-                if (Filters[key] == "real"){
-                  sliderVals =  document.getElementById(
-                    "div_" + keyS).noUiSlider.get();
-                  try{
-                    if (key in features[0].properties){
-                    for (i = features.length - 1; i >= 0; --i){
-                      if (features[i].properties[key]
-                          < sliderVals[0]
-                          || features[i].properties[key]
-                          > sliderVals[1]){
-                            features.splice(i,1);
-                          }
-                        }
-                      }
-                    } catch(err){
-                    }
-                  }
-                if (Filters[key] == "date"
-                  || Filters[key] == "datetime"
-                  || Filters[key] == "time"){
-                  try{
-                    if (key in features[0].properties){
-                      HTMLkey = key.replace(/[&\\/\\#,+()$~%.'":*?<>{} ]/g, '');
-                      startdate = document.getElementById("dat_" +
-                        HTMLkey + "_date1").value.replace(" ", "T");
-                      enddate = document.getElementById("dat_" +
-                        HTMLkey + "_date2").value.replace(" ", "T");
-                      for (i = features.length - 1; i >= 0; --i){
-                        if (features[i].properties[key] < startdate
-                          || features[i].properties[key] > enddate){
-                          features.splice(i,1);
-                        }
-                      }
-                    }
-                  } catch(err){
-                  }
-                }
-              }
-            } catch(err){
-            }
-          this[lyr["options"]["layerName"]].clearLayers();
-          this[lyr["options"]["layerName"]].addData(features);
-        var i = 0;
-        layer_Poblados_2.eachLayer(function(layer) {
-            var context = {
-                feature: layer.feature,
-                variables: {}
-            };
-            layer.bindTooltip((layer.feature.properties['NOMBRE'] !== null?String('<div style="color: #ffffff; font-size: 10pt; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['NOMBRE']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Poblados_2'});
-            labels.push(layer);
-            totalMarkers += 1;
-              layer.added = true;
-              addLabel(layer, i);
-              i++;
-        });
-        var i = 0;
-        layer_Cerros_3.eachLayer(function(layer) {
-            var context = {
-                feature: layer.feature,
-                variables: {}
-            };
-            layer.bindTooltip((layer.feature.properties['nom_ofi'] !== null?String('<div style="color: #ffffff; font-size: 10pt; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['nom_ofi']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Cerros_3'});
-            labels.push(layer);
-            totalMarkers += 1;
-              layer.added = true;
-              addLabel(layer, i);
-              i++;
-        });
-          }
-          })
-        }
-            document.getElementById("menu").appendChild(
-                document.createElement("div"));
-            var div_Zona = document.createElement('div');
-            div_Zona.id = "div_Zona";
-            div_Zona.className= "filterselect";
-            document.getElementById("menu").appendChild(div_Zona);
-            sel_Zona = document.createElement('select');
-            sel_Zona.multiple = true;
-            sel_Zona.size = 4;
-            sel_Zona.id = "sel_Zona";
-            var Zona_options_str = "<option value='' unselected></option>";
-            sel_Zona.onchange = function(){filterFunc()};
-            Zona_options_str  += '<option value="Asentamientos poblacionales">Asentamientos poblacionales</option>';
-            Zona_options_str  += '<option value="Zona Protección Absoluta">Zona Protección Absoluta</option>';
-            Zona_options_str  += '<option value="Zona de conservación y uso sostenible del bosque">Zona de conservación y uso sostenible del bosque</option>';
-            Zona_options_str  += '<option value="Zona paisaje productivo sostenible">Zona paisaje productivo sostenible</option>';
-            sel_Zona.innerHTML = Zona_options_str;
-            div_Zona.appendChild(sel_Zona);
-            var lab_Zona = document.createElement('div');
-            lab_Zona.innerHTML = 'Zona';
-            lab_Zona.className = 'filterlabel';
-            div_Zona.appendChild(lab_Zona);
-            var reset_Zona = document.createElement('div');
-            reset_Zona.innerHTML = 'clear filter';
-            reset_Zona.className = 'filterlabel';
-            reset_Zona.onclick = function() {
-                var options = document.getElementById("sel_Zona").options;
-                for (var i=0; i < options.length; i++) {
-                    options[i].selected = false;
-                }
-                filterFunc();
-            };
-            div_Zona.appendChild(reset_Zona);
         resetLabels([layer_Poblados_2,layer_Cerros_3]);
         map.on("zoomend", function(){
             resetLabels([layer_Poblados_2,layer_Cerros_3]);
