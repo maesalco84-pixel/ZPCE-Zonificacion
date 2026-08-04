@@ -30,6 +30,7 @@
         <script src="js/leaflet.js"></script>
         <script src="js/L.Control.Layers.Tree.min.js"></script>
         <script src="js/L.Control.Locate.min.js"></script>
+        <script src="js/multi-style-layer.js"></script>
         <script src="js/leaflet-svg-shape-markers.min.js"></script>
         <script src="js/leaflet.rotatedMarker.js"></script>
         <script src="js/leaflet.pattern.js"></script>
@@ -40,13 +41,16 @@
         <script src="js/labels.js"></script>
         <script src="js/leaflet.photon.js"></script>
         <script src="js/leaflet-measure.js"></script>
-        <script src="data/ZPCEZONIFICACION_1.js"></script>
-        <script src="data/Poblados_2.js"></script>
-        <script src="data/Cerros_3.js"></script>
+        <script src="data/DelimitacinTIQ_1.js"></script>
+        <script src="data/ZPCEZONIFICACION_2.js"></script>
+        <script src="data/DelimitacionZPCE_3.js"></script>
+        <script src="data/ZPCERedVial_4.js"></script>
+        <script src="data/Poblados_5.js"></script>
+        <script src="data/Cerros_6.js"></script>
         <script>
         var map = L.map('map', {
             zoomControl:false, maxZoom:22, minZoom:8
-        }).fitBounds([[9.864412598093923,-84.1736499282542],[9.893984456078872,-84.14492590793866]]);
+        }).fitBounds([[9.831541210027334,-84.27993135162683],[9.926695324304722,-84.07283623254254]]);
         var hash = new L.Hash(map);
         map.attributionControl.setPrefix('<a href="https://github.com/qgis2web/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
         var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
@@ -152,7 +156,71 @@
         });
         layer_EsriWorldImagery_0;
         map.addLayer(layer_EsriWorldImagery_0);
-        function pop_ZPCEZONIFICACION_1(feature, layer) {
+        function pop_DelimitacinTIQ_1(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['FID'] !== null ? autolinker.link(String(feature.properties['FID']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Nombre'] !== null ? autolinker.link(String(feature.properties['Nombre']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['area'] !== null ? autolinker.link(String(feature.properties['area']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        var pattern_DelimitacinTIQ_1_0 = new L.StripePattern({
+            weight: 0.5,
+            spaceWeight: 2.0,
+            color: '#dd3a3a',
+            opacity: 1.0,
+            spaceOpacity: 0,
+            angle: 225
+        });
+        pattern_DelimitacinTIQ_1_0.addTo(map);
+        function style_DelimitacinTIQ_1_0() {
+            return {
+                pane: 'pane_DelimitacinTIQ_1',
+                stroke: false,
+                fillOpacity: 1,
+                fillPattern: pattern_DelimitacinTIQ_1_0,
+                interactive: true,
+            }
+        }
+        function style_DelimitacinTIQ_1_1() {
+            return {
+                pane: 'pane_DelimitacinTIQ_1',
+                opacity: 1,
+                color: 'rgba(221,58,58,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 2.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+        }
+        map.createPane('pane_DelimitacinTIQ_1');
+        map.getPane('pane_DelimitacinTIQ_1').style.zIndex = 401;
+        map.getPane('pane_DelimitacinTIQ_1').style['mix-blend-mode'] = 'normal';
+        var layer_DelimitacinTIQ_1 = new L.geoJson.multiStyle(json_DelimitacinTIQ_1, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_DelimitacinTIQ_1',
+            layerName: 'layer_DelimitacinTIQ_1',
+            pane: 'pane_DelimitacinTIQ_1',
+            onEachFeature: pop_DelimitacinTIQ_1,
+            styles: [style_DelimitacinTIQ_1_0,style_DelimitacinTIQ_1_1,]
+        });
+        bounds_group.addLayer(layer_DelimitacinTIQ_1);
+        map.addLayer(layer_DelimitacinTIQ_1);
+        function pop_ZPCEZONIFICACION_2(feature, layer) {
             var popupContent = '<table>\
                     <tr>\
                         <td colspan="2">' + (feature.properties['fid'] !== null ? autolinker.link(String(feature.properties['fid']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
@@ -168,85 +236,197 @@
 			layer.bindPopup(content, { maxHeight: 400 });
         }
 
-        function style_ZPCEZONIFICACION_1_0(feature) {
+        function style_ZPCEZONIFICACION_2_0(feature) {
             switch(String(feature.properties['Zona'])) {
                 case 'Asentamientos poblacionales':
                     return {
-                pane: 'pane_ZPCEZONIFICACION_1',
+                pane: 'pane_ZPCEZONIFICACION_2',
                 opacity: 1,
-                color: 'rgba(255,255,255,0.32)',
+                color: 'rgba(255,255,255,0.3)',
                 dashArray: '',
                 lineCap: 'butt',
                 lineJoin: 'miter',
                 weight: 1.0, 
                 fill: true,
                 fillOpacity: 1,
-                fillColor: 'rgba(192,57,43,0.32)',
+                fillColor: 'rgba(192,57,43,0.3)',
                 interactive: true,
             }
                     break;
                 case 'Zona de conservación y uso sostenible del bosque':
                     return {
-                pane: 'pane_ZPCEZONIFICACION_1',
+                pane: 'pane_ZPCEZONIFICACION_2',
                 opacity: 1,
-                color: 'rgba(255,255,255,0.32)',
+                color: 'rgba(255,255,255,0.3)',
                 dashArray: '',
                 lineCap: 'butt',
                 lineJoin: 'miter',
                 weight: 1.0, 
                 fill: true,
                 fillOpacity: 1,
-                fillColor: 'rgba(46,125,50,0.32)',
+                fillColor: 'rgba(46,125,50,0.3)',
                 interactive: true,
             }
                     break;
                 case 'Zona paisaje productivo sostenible':
                     return {
-                pane: 'pane_ZPCEZONIFICACION_1',
+                pane: 'pane_ZPCEZONIFICACION_2',
                 opacity: 1,
-                color: 'rgba(255,255,255,0.32)',
+                color: 'rgba(255,255,255,0.3)',
                 dashArray: '',
                 lineCap: 'butt',
                 lineJoin: 'miter',
                 weight: 1.0, 
                 fill: true,
                 fillOpacity: 1,
-                fillColor: 'rgba(244,208,63,0.32)',
+                fillColor: 'rgba(244,208,63,0.3)',
                 interactive: true,
             }
                     break;
                 case 'Zona Protección Absoluta':
                     return {
-                pane: 'pane_ZPCEZONIFICACION_1',
+                pane: 'pane_ZPCEZONIFICACION_2',
                 opacity: 1,
-                color: 'rgba(255,255,255,0.32)',
+                color: 'rgba(255,255,255,0.3)',
                 dashArray: '',
                 lineCap: 'butt',
                 lineJoin: 'miter',
                 weight: 1.0, 
                 fill: true,
                 fillOpacity: 1,
-                fillColor: 'rgba(25,118,210,0.32)',
+                fillColor: 'rgba(25,118,210,0.3)',
                 interactive: true,
             }
                     break;
             }
         }
-        map.createPane('pane_ZPCEZONIFICACION_1');
-        map.getPane('pane_ZPCEZONIFICACION_1').style.zIndex = 401;
-        map.getPane('pane_ZPCEZONIFICACION_1').style['mix-blend-mode'] = 'normal';
-        var layer_ZPCEZONIFICACION_1 = new L.geoJson(json_ZPCEZONIFICACION_1, {
+        map.createPane('pane_ZPCEZONIFICACION_2');
+        map.getPane('pane_ZPCEZONIFICACION_2').style.zIndex = 402;
+        map.getPane('pane_ZPCEZONIFICACION_2').style['mix-blend-mode'] = 'normal';
+        var layer_ZPCEZONIFICACION_2 = new L.geoJson(json_ZPCEZONIFICACION_2, {
             attribution: '',
             interactive: true,
-            dataVar: 'json_ZPCEZONIFICACION_1',
-            layerName: 'layer_ZPCEZONIFICACION_1',
-            pane: 'pane_ZPCEZONIFICACION_1',
-            onEachFeature: pop_ZPCEZONIFICACION_1,
-            style: style_ZPCEZONIFICACION_1_0,
+            dataVar: 'json_ZPCEZONIFICACION_2',
+            layerName: 'layer_ZPCEZONIFICACION_2',
+            pane: 'pane_ZPCEZONIFICACION_2',
+            onEachFeature: pop_ZPCEZONIFICACION_2,
+            style: style_ZPCEZONIFICACION_2_0,
         });
-        bounds_group.addLayer(layer_ZPCEZONIFICACION_1);
-        map.addLayer(layer_ZPCEZONIFICACION_1);
-        function pop_Poblados_2(feature, layer) {
+        bounds_group.addLayer(layer_ZPCEZONIFICACION_2);
+        map.addLayer(layer_ZPCEZONIFICACION_2);
+        function pop_DelimitacionZPCE_3(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(String(feature.properties['id']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['nom_cant'] !== null ? autolinker.link(String(feature.properties['nom_cant']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['area'] !== null ? autolinker.link(String(feature.properties['area']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['area 1'] !== null ? autolinker.link(String(feature.properties['area 1']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['area_ha'] !== null ? autolinker.link(String(feature.properties['area_ha']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Area_3'] !== null ? autolinker.link(String(feature.properties['Area_3']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['area4'] !== null ? autolinker.link(String(feature.properties['area4']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['area_wgs84'] !== null ? autolinker.link(String(feature.properties['area_wgs84']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_DelimitacionZPCE_3_0() {
+            return {
+                pane: 'pane_DelimitacionZPCE_3',
+                opacity: 1,
+                color: 'rgba(41,166,221,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 8.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(29,187,44,0.0)',
+                interactive: false,
+            }
+        }
+        map.createPane('pane_DelimitacionZPCE_3');
+        map.getPane('pane_DelimitacionZPCE_3').style.zIndex = 403;
+        map.getPane('pane_DelimitacionZPCE_3').style['mix-blend-mode'] = 'normal';
+        var layer_DelimitacionZPCE_3 = new L.geoJson(json_DelimitacionZPCE_3, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json_DelimitacionZPCE_3',
+            layerName: 'layer_DelimitacionZPCE_3',
+            pane: 'pane_DelimitacionZPCE_3',
+            onEachFeature: pop_DelimitacionZPCE_3,
+            style: style_DelimitacionZPCE_3_0,
+        });
+        bounds_group.addLayer(layer_DelimitacionZPCE_3);
+        map.addLayer(layer_DelimitacionZPCE_3);
+        function pop_ZPCERedVial_4(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['fid'] !== null ? autolinker.link(String(feature.properties['fid']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['descripcio'] !== null ? autolinker.link(String(feature.properties['descripcio']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Nombre'] !== null ? autolinker.link(String(feature.properties['Nombre']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Calle_PR'] !== null ? autolinker.link(String(feature.properties['Calle_PR']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_ZPCERedVial_4_0() {
+            return {
+                pane: 'pane_ZPCERedVial_4',
+                opacity: 1,
+                color: 'rgba(179,5,5,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 3.0,
+                fillOpacity: 0,
+                interactive: false,
+            }
+        }
+        map.createPane('pane_ZPCERedVial_4');
+        map.getPane('pane_ZPCERedVial_4').style.zIndex = 404;
+        map.getPane('pane_ZPCERedVial_4').style['mix-blend-mode'] = 'normal';
+        var layer_ZPCERedVial_4 = new L.geoJson(json_ZPCERedVial_4, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json_ZPCERedVial_4',
+            layerName: 'layer_ZPCERedVial_4',
+            pane: 'pane_ZPCERedVial_4',
+            onEachFeature: pop_ZPCERedVial_4,
+            style: style_ZPCERedVial_4_0,
+        });
+        bounds_group.addLayer(layer_ZPCERedVial_4);
+        map.addLayer(layer_ZPCERedVial_4);
+        function pop_Poblados_5(feature, layer) {
             var popupContent = '<table>\
                     <tr>\
                         <td colspan="2">' + (feature.properties['fid'] !== null ? autolinker.link(String(feature.properties['fid']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
@@ -262,12 +442,12 @@
 			layer.bindPopup(content, { maxHeight: 400 });
         }
 
-        function style_Poblados_2_0() {
+        function style_Poblados_5_0() {
             return {
-                pane: 'pane_Poblados_2',
+                pane: 'pane_Poblados_5',
                 radius: 4.8,
                 opacity: 1,
-                color: 'rgba(255,255,255,1.0)',
+                color: 'rgba(0,0,0,1.0)',
                 dashArray: '',
                 lineCap: 'butt',
                 lineJoin: 'miter',
@@ -278,27 +458,27 @@
                 interactive: true,
             }
         }
-        map.createPane('pane_Poblados_2');
-        map.getPane('pane_Poblados_2').style.zIndex = 402;
-        map.getPane('pane_Poblados_2').style['mix-blend-mode'] = 'normal';
-        var layer_Poblados_2 = new L.geoJson(json_Poblados_2, {
+        map.createPane('pane_Poblados_5');
+        map.getPane('pane_Poblados_5').style.zIndex = 405;
+        map.getPane('pane_Poblados_5').style['mix-blend-mode'] = 'normal';
+        var layer_Poblados_5 = new L.geoJson(json_Poblados_5, {
             attribution: '',
             interactive: true,
-            dataVar: 'json_Poblados_2',
-            layerName: 'layer_Poblados_2',
-            pane: 'pane_Poblados_2',
-            onEachFeature: pop_Poblados_2,
+            dataVar: 'json_Poblados_5',
+            layerName: 'layer_Poblados_5',
+            pane: 'pane_Poblados_5',
+            onEachFeature: pop_Poblados_5,
             pointToLayer: function (feature, latlng) {
                 var context = {
                     feature: feature,
                     variables: {}
                 };
-                return L.circleMarker(latlng, style_Poblados_2_0(feature));
+                return L.circleMarker(latlng, style_Poblados_5_0(feature));
             },
         });
-        bounds_group.addLayer(layer_Poblados_2);
-        map.addLayer(layer_Poblados_2);
-        function pop_Cerros_3(feature, layer) {
+        bounds_group.addLayer(layer_Poblados_5);
+        map.addLayer(layer_Poblados_5);
+        function pop_Cerros_6(feature, layer) {
             var popupContent = '<table>\
                     <tr>\
                         <td colspan="2">' + (feature.properties['fid'] !== null ? autolinker.link(String(feature.properties['fid']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
@@ -314,9 +494,9 @@
 			layer.bindPopup(content, { maxHeight: 400 });
         }
 
-        function style_Cerros_3_0() {
+        function style_Cerros_6_0() {
             return {
-                pane: 'pane_Cerros_3',
+                pane: 'pane_Cerros_6',
                 shape: 'triangle',
                 radius: 8.0,
                 opacity: 1,
@@ -331,30 +511,33 @@
                 interactive: true,
             }
         }
-        map.createPane('pane_Cerros_3');
-        map.getPane('pane_Cerros_3').style.zIndex = 403;
-        map.getPane('pane_Cerros_3').style['mix-blend-mode'] = 'normal';
-        var layer_Cerros_3 = new L.geoJson(json_Cerros_3, {
+        map.createPane('pane_Cerros_6');
+        map.getPane('pane_Cerros_6').style.zIndex = 406;
+        map.getPane('pane_Cerros_6').style['mix-blend-mode'] = 'normal';
+        var layer_Cerros_6 = new L.geoJson(json_Cerros_6, {
             attribution: '',
             interactive: true,
-            dataVar: 'json_Cerros_3',
-            layerName: 'layer_Cerros_3',
-            pane: 'pane_Cerros_3',
-            onEachFeature: pop_Cerros_3,
+            dataVar: 'json_Cerros_6',
+            layerName: 'layer_Cerros_6',
+            pane: 'pane_Cerros_6',
+            onEachFeature: pop_Cerros_6,
             pointToLayer: function (feature, latlng) {
                 var context = {
                     feature: feature,
                     variables: {}
                 };
-                return L.shapeMarker(latlng, style_Cerros_3_0(feature));
+                return L.shapeMarker(latlng, style_Cerros_6_0(feature));
             },
         });
-        bounds_group.addLayer(layer_Cerros_3);
-        map.addLayer(layer_Cerros_3);
+        bounds_group.addLayer(layer_Cerros_6);
+        map.addLayer(layer_Cerros_6);
         var overlaysTree = [
-            {label: '<img src="legend/Cerros_3.png" /> Cerros', layer: layer_Cerros_3},
-            {label: '<img src="legend/Poblados_2.png" /> Poblados', layer: layer_Poblados_2},
-            {label: 'ZPCE - ZONIFICACION<br /><table><tr><td style="text-align: center;"><img src="legend/ZPCEZONIFICACION_1_Asentamientospoblacionales0.png" /></td><td>Asentamientos poblacionales</td></tr><tr><td style="text-align: center;"><img src="legend/ZPCEZONIFICACION_1_Zonadeconservaciónyusosostenibledelbosque1.png" /></td><td>Zona de conservación y uso sostenible del bosque</td></tr><tr><td style="text-align: center;"><img src="legend/ZPCEZONIFICACION_1_Zonapaisajeproductivosostenible2.png" /></td><td>Zona paisaje productivo sostenible</td></tr><tr><td style="text-align: center;"><img src="legend/ZPCEZONIFICACION_1_ZonaProtecciónAbsoluta3.png" /></td><td>Zona Protección Absoluta</td></tr></table>', layer: layer_ZPCEZONIFICACION_1},
+            {label: '<img src="legend/Cerros_6.png" /> Cerros', layer: layer_Cerros_6},
+            {label: '<img src="legend/Poblados_5.png" /> Poblados', layer: layer_Poblados_5},
+            {label: '<img src="legend/ZPCERedVial_4.png" /> ZPCE Red Vial', layer: layer_ZPCERedVial_4},
+            {label: '<img src="legend/DelimitacionZPCE_3.png" /> Delimitacion ZPCE', layer: layer_DelimitacionZPCE_3},
+            {label: 'ZPCE - ZONIFICACION<br /><table><tr><td style="text-align: center;"><img src="legend/ZPCEZONIFICACION_2_Asentamientospoblacionales0.png" /></td><td>Asentamientos poblacionales</td></tr><tr><td style="text-align: center;"><img src="legend/ZPCEZONIFICACION_2_Zonadeconservaciónyusosostenibledelbosque1.png" /></td><td>Zona de conservación y uso sostenible del bosque</td></tr><tr><td style="text-align: center;"><img src="legend/ZPCEZONIFICACION_2_Zonapaisajeproductivosostenible2.png" /></td><td>Zona paisaje productivo sostenible</td></tr><tr><td style="text-align: center;"><img src="legend/ZPCEZONIFICACION_2_ZonaProtecciónAbsoluta3.png" /></td><td>Zona Protección Absoluta</td></tr></table>', layer: layer_ZPCEZONIFICACION_2},
+            {label: '<img src="legend/DelimitacinTIQ_1.png" /> Delimitación TIQ', layer: layer_DelimitacinTIQ_1},
             {label: "Esri World Imagery", layer: layer_EsriWorldImagery_0},]
         var lay = L.control.layers.tree(null, overlaysTree,{
             //namedToggle: true,
@@ -366,14 +549,28 @@
             collapsed: true,
         });
         lay.addTo(map);
+        map.on("zoomend", function(){
+
+                if (map.hasLayer(layer_DelimitacinTIQ_1)) {
+                    if (map.getZoom() <= 12 && map.getZoom() >= 19) {
+                        layer_DelimitacinTIQ_1.eachLayer(function (layer) {
+                            layer.openTooltip();
+                        });
+                    } else {
+                        layer_DelimitacinTIQ_1.eachLayer(function (layer) {
+                            layer.closeTooltip();
+                        });
+                    }
+                }
+        });
         setBounds();
         var i = 0;
-        layer_Poblados_2.eachLayer(function(layer) {
+        layer_DelimitacinTIQ_1.eachLayer(function(layer) {
             var context = {
                 feature: layer.feature,
                 variables: {}
             };
-            layer.bindTooltip((layer.feature.properties['NOMBRE'] !== null?String('<div style="color: #ffffff; font-size: 10pt; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['NOMBRE']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Poblados_2'});
+            layer.bindTooltip((layer.feature.properties['Nombre'] !== null?String('<div style="color: #ffffff; font-size: 30pt; font-weight: bold; font-family: \'Myriad Pro\', sans-serif;">' + layer.feature.properties['Nombre']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_DelimitacinTIQ_1'});
             labels.push(layer);
             totalMarkers += 1;
               layer.added = true;
@@ -381,27 +578,51 @@
               i++;
         });
         var i = 0;
-        layer_Cerros_3.eachLayer(function(layer) {
+        layer_Poblados_5.eachLayer(function(layer) {
             var context = {
                 feature: layer.feature,
                 variables: {}
             };
-            layer.bindTooltip((layer.feature.properties['nom_ofi'] !== null?String('<div style="color: #ffffff; font-size: 10pt; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['nom_ofi']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Cerros_3'});
+            layer.bindTooltip((layer.feature.properties['NOMBRE'] !== null?String('<div style="color: #ffffff; font-size: 10pt; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['NOMBRE']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Poblados_5'});
             labels.push(layer);
             totalMarkers += 1;
               layer.added = true;
               addLabel(layer, i);
               i++;
         });
-        resetLabels([layer_Poblados_2,layer_Cerros_3]);
+        var i = 0;
+        layer_Cerros_6.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['nom_ofi'] !== null?String('<div style="color: #ffffff; font-size: 10pt; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['nom_ofi']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Cerros_6'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+                if (map.hasLayer(layer_DelimitacinTIQ_1)) {
+                    if (map.getZoom() <= 12 && map.getZoom() >= 19) {
+                        layer_DelimitacinTIQ_1.eachLayer(function (layer) {
+                            layer.openTooltip();
+                        });
+                    } else {
+                        layer_DelimitacinTIQ_1.eachLayer(function (layer) {
+                            layer.closeTooltip();
+                        });
+                    }
+                }
+        resetLabels([layer_DelimitacinTIQ_1,layer_Poblados_5,layer_Cerros_6]);
         map.on("zoomend", function(){
-            resetLabels([layer_Poblados_2,layer_Cerros_3]);
+            resetLabels([layer_DelimitacinTIQ_1,layer_Poblados_5,layer_Cerros_6]);
         });
         map.on("layeradd", function(){
-            resetLabels([layer_Poblados_2,layer_Cerros_3]);
+            resetLabels([layer_DelimitacinTIQ_1,layer_Poblados_5,layer_Cerros_6]);
         });
         map.on("layerremove", function(){
-            resetLabels([layer_Poblados_2,layer_Cerros_3]);
+            resetLabels([layer_DelimitacinTIQ_1,layer_Poblados_5,layer_Cerros_6]);
         });
         </script>        
     </body>
